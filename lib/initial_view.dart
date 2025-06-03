@@ -10,11 +10,7 @@ class InitialView extends StatefulWidget {
 
 class _InitialViewState extends State<InitialView> {
   bool isConnected = false;
-
-  // Seleccionables
-  bool opcion1 = false;
-  bool opcion2 = false;
-  bool opcion3 = false;
+  String? seleccionActual;
 
   // Cronómetro
   Timer? _timer;
@@ -91,7 +87,7 @@ class _InitialViewState extends State<InitialView> {
             content: const Text(
               'VPN Free\n\n'
               'Versión: 1.0.0\n'
-              'Desarrollado por: Tu Nombre\n\n'
+              'Desarrollado por: Jholian Domiguez Suarez\n\n'
               'Esta aplicación te permite conectarte a servidores VPN para proteger tu privacidad y navegar de forma segura.',
             ),
             actions: [
@@ -106,7 +102,7 @@ class _InitialViewState extends State<InitialView> {
 
   @override
   void dispose() {
-    _timer?.cancel(); // Cancelar al destruir
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -117,12 +113,13 @@ class _InitialViewState extends State<InitialView> {
       home: Scaffold(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 207, 6, 164),
+          backgroundColor: const Color.fromARGB(255, 255, 0, 149),
           title: const Text(
             'VPN Free',
             style: TextStyle(color: Color.fromARGB(255, 250, 247, 247)),
           ),
-          centerTitle: true,
+
+          centerTitle: false,
           elevation: 0,
           actions: [
             PopupMenuButton<String>(
@@ -157,12 +154,16 @@ class _InitialViewState extends State<InitialView> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Botón "Servidores"
+                // Botón "close"
                 ElevatedButton(
                   onPressed: () => _showServersMenu(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
+                    foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                    side: const BorderSide(
+                      color: Color.fromARGB(255, 255, 0, 149),
+                      width: 5,
+                    ),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 200,
                       vertical: 20,
@@ -182,8 +183,6 @@ class _InitialViewState extends State<InitialView> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      SizedBox(width: 10),
-                      Icon(Icons.arrow_forward_ios, size: 16),
                     ],
                   ),
                 ),
@@ -192,103 +191,138 @@ class _InitialViewState extends State<InitialView> {
 
                 // Cuadro seleccionables
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(00),
+                  margin: const EdgeInsets.symmetric(horizontal: 32),
                   decoration: BoxDecoration(
                     color: const Color.fromARGB(
                       255,
-                      167,
-                      84,
-                      84,
-                    ).withOpacity(0.9),
+                      255,
+                      255,
+                      255,
+                    ).withOpacity(0.8),
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 255, 0, 149),
+                      width: 5,
+                    ),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Checkbox(
-                            value: opcion1,
-                            onChanged: (value) {
-                              setState(() => opcion1 = value!);
-                            },
+                          Row(
+                            children: [
+                              Radio<String>(
+                                value: 'UDP',
+                                groupValue: seleccionActual,
+                                onChanged: (value) {
+                                  setState(() => seleccionActual = value);
+                                },
+                              ),
+                              const Text('   UDP'),
+                            ],
                           ),
-                          const Text('     UDP     '),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: opcion2,
-                            onChanged: (value) {
-                              setState(() => opcion2 = value!);
-                            },
+                          const SizedBox(width: 40),
+                          Row(
+                            children: [
+                              Radio<String>(
+                                value: 'WireGuard',
+                                groupValue: seleccionActual,
+                                onChanged: (value) {
+                                  setState(() => seleccionActual = value);
+                                },
+                              ),
+                              const Text('   WireGuard'),
+                            ],
                           ),
-                          const Text('     WireGuard     '),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Checkbox(
-                            value: opcion3,
-                            onChanged: (value) {
-                              setState(() => opcion3 = value!);
-                            },
+                          const SizedBox(width: 40),
+                          Row(
+                            children: [
+                              Radio<String>(
+                                value: 'FastDnS',
+                                groupValue: seleccionActual,
+                                onChanged: (value) {
+                                  setState(() => seleccionActual = value);
+                                },
+                              ),
+                              const Text('   FastDnS'),
+                            ],
                           ),
-                          const Text('     FastDnS     '),
                         ],
                       ),
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 30),
-
                 // Botón principal redondo
                 ElevatedButton(
                   onPressed: _toggleConnection,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    padding: const EdgeInsets.all(50),
+                    backgroundColor: const Color.fromARGB(255, 231, 231, 231),
+                    foregroundColor: Colors.black,
+                    side: const BorderSide(
+                      color: Color.fromARGB(255, 235, 14, 14),
+                    ),
+                    padding: const EdgeInsets.all(37),
                     shape: const CircleBorder(),
-                    elevation: 10,
+                    elevation: 5,
                   ),
-                  child: Icon(
-                    Icons.power_settings_new,
-                    size: 30,
-                    color: isConnected ? Colors.green : Colors.red,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Text(
+                        isConnected ? 'Stop' : 'Start',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 235, 14, 14),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-
-                const SizedBox(height: 20),
-
-                // Estado de conexión
-                Text(
-                  isConnected ? 'Conectado' : 'Desconectado',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: isConnected ? Colors.green : Colors.red,
-                  ),
+                const SizedBox(height: 25),
+                // Cronómetro
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Duration: ',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Color.fromARGB(255, 0, 25, 255),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      _formatTime(_seconds),
+                      style: TextStyle(
+                        fontSize: 15,
+                        color:
+                            isConnected
+                                ? const Color.fromARGB(255, 25, 0, 255)
+                                : const Color.fromARGB(255, 25, 0, 255),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
 
                 const SizedBox(height: 10),
 
-                // Cronómetro
-                if (isConnected)
-                  Text(
-                    _formatTime(_seconds),
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: Color.fromARGB(255, 25, 0, 255),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-
-                const SizedBox(height: 20),
-
                 // Configuración
                 const Text(
-                  'Configuración: 1.0',
+                  'Configuración: 1.0.0',
                   style: TextStyle(
                     fontSize: 14,
                     color: Color.fromARGB(255, 255, 0, 0),
