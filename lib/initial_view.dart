@@ -111,14 +111,12 @@ class _InitialViewState extends State<InitialView> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 255, 0, 149),
           title: const Text(
             'VPN Free',
             style: TextStyle(color: Color.fromARGB(255, 250, 247, 247)),
           ),
-
           centerTitle: false,
           elevation: 0,
           actions: [
@@ -140,20 +138,53 @@ class _InitialViewState extends State<InitialView> {
             ),
           ],
         ),
-        body: Container(
+
+        body: SizedBox(
           width: double.infinity,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(
-                'https://www.xtrafondos.com/wallpapers/tigre-de-neon-artwork-4673.jpg',
-              ),
-              fit: BoxFit.cover,
-            ),
-          ),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // Fila: Flechas a la izquierda, Wi-Fi a la derecha
+                Padding(
+                  padding: const EdgeInsets.only(right: 40),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Flechas en columna
+                      Column(
+                        children: [
+                          Icon(
+                            Icons.arrow_downward,
+                            size: 20,
+                            color:
+                                isConnected
+                                    ? Colors.green
+                                    : const Color.fromARGB(255, 255, 0, 0),
+                          ),
+                          const SizedBox(height: 3),
+                          const SizedBox(width: 5),
+                          Icon(
+                            Icons.arrow_upward,
+                            size: 20,
+                            color:
+                                isConnected
+                                    ? Colors.green
+                                    : const Color.fromARGB(255, 255, 0, 0),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      // Ícono de Wi-Fi
+                      Icon(
+                        isConnected ? Icons.wifi : Icons.wifi_off,
+                        size: 100,
+                        color: isConnected ? Colors.green : Colors.redAccent,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
                 // Botón "close"
                 ElevatedButton(
                   onPressed: () => _showServersMenu(context),
@@ -187,7 +218,7 @@ class _InitialViewState extends State<InitialView> {
                   ),
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
 
                 // Cuadro seleccionables
                 Container(
@@ -199,6 +230,7 @@ class _InitialViewState extends State<InitialView> {
                       255,
                       255,
                       255,
+                      // ignore: deprecated_member_use
                     ).withOpacity(0.8),
                     border: Border.all(
                       color: const Color.fromARGB(255, 255, 0, 149),
@@ -254,7 +286,7 @@ class _InitialViewState extends State<InitialView> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 25),
                 // Botón principal redondo
                 ElevatedButton(
                   onPressed: _toggleConnection,
@@ -264,7 +296,7 @@ class _InitialViewState extends State<InitialView> {
                     side: const BorderSide(
                       color: Color.fromARGB(255, 235, 14, 14),
                     ),
-                    padding: const EdgeInsets.all(37),
+                    padding: const EdgeInsets.all(30),
                     shape: const CircleBorder(),
                     elevation: 5,
                   ),
@@ -279,7 +311,7 @@ class _InitialViewState extends State<InitialView> {
                         ),
                       ),
                       Container(
-                        width: 100,
+                        width: 90,
                         height: 100,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
@@ -317,16 +349,54 @@ class _InitialViewState extends State<InitialView> {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 10),
-
-                // Configuración
                 const Text(
                   'Configuración: 1.0.0',
                   style: TextStyle(
                     fontSize: 14,
                     color: Color.fromARGB(255, 255, 0, 0),
                   ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: BottomAppBar(
+          color: const Color.fromARGB(255, 255, 0, 149),
+          child: SizedBox(
+            height: 70,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).maybePop();
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.circle, color: Colors.white, size: 30),
+                  onPressed: () {
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.crop_square,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Mostrando apps recientes... (simulado)'),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
